@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>F5 Traction — CRM Interno</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="loog.PNG">
+  <style>
+    :root {
+      --primary: #070F22;
+      --secondary: #0D1F4A;
+      --accent: #2B7FFF;
+      --bg-dark: #070F22;
+      --bg-dark-2: #0a1630;
+      --surface: #0e1a3a;
+      --ink: #FFFFFF;
+      --ink-2: #A3B4CB;
+      --line: rgba(255,255,255,0.08);
+      --card: rgba(255,255,255,0.04);
+      --radius: 0.75rem;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--ink);
+      font-family: 'Poppins', sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      background: var(--bg-dark-2);
+      border-bottom: 1px solid var(--line);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 { font-size: 1.25rem; font-weight: 600; margin-left: 1rem; flex-grow: 1; }
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    #lead-count { color: var(--ink-2); font-size: 0.875rem; font-weight: 500; }
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+    button {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-family: inherit;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    button:hover { background: rgba(255,255,255,0.1); }
+    #btn-export { background: var(--accent); border-color: transparent; font-weight: 600; }
+    #btn-export:hover { background: #1a62d4; }
+    
+    main { padding: 2rem 1.5rem; max-width: 1400px; margin: 0 auto; }
+    
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-number { font-size: 2rem; font-weight: 800; line-height: 1; margin-bottom: 0.5rem; color: var(--accent); }
+    .stat-label { font-size: 0.875rem; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+    
+    .filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    input, select {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-family: inherit;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      outline: none;
+    }
+    input { flex-grow: 1; }
+    input:focus, select:focus { border-color: var(--accent); }
+    
+    .table-container {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 1rem; border-bottom: 1px solid var(--line); font-size: 0.875rem; }
+    th { color: var(--ink-2); font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; white-space: nowrap; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody tr:last-child td { border-bottom: none; }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      user-select: none;
+    }
+    .status-novo { background: rgba(43,127,255,0.2); color: #4DA3FF; border: 1px solid rgba(43,127,255,0.3); }
+    .status-contatado { background: rgba(245,158,11,0.2); color: #fbd38d; border: 1px solid rgba(245,158,11,0.3); }
+    .status-qualificado { background: rgba(139,92,246,0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.3); }
+    .status-negociando { background: rgba(6,182,212,0.2); color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); }
+    .status-fechado { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+    .status-perdido { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+    
+    .action-btn { background: transparent; border: none; padding: 0.25rem; font-size: 1.25rem; opacity: 0.7; }
+    .action-btn:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+    
+    .no-leads { padding: 3rem; text-align: center; color: var(--ink-2); }
+    
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 50;
+      display: flex; items-center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      align-items: center;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: var(--bg-dark-2); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 2rem; width: 100%; max-width: 600px;
+      position: relative; max-height: 90vh; overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem; background: transparent; border: none;
+      font-size: 1.5rem; color: var(--ink-2); cursor: pointer;
+    }
+    .modal-close:hover { color: var(--ink); }
+    
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    .detail-item { background: var(--surface); padding: 1rem; border-radius: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;}
+    .detail-label { font-size: 0.75rem; color: var(--ink-2); text-transform: uppercase; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex; align-items:center;">
+      <img src="loog.PNG" alt="F5 Traction" style="height:36px; border-radius: 6px;">
+      <h1>CRM Interno</h1>
+    </div>
+    <div class="header-actions">
+      <span id="lead-count">0 leads</span>
+      <button id="btn-export" onclick="exportCSV()">Exportar CSV</button>
+      <button id="btn-clear" onclick="clearLeads()">Limpar dados</button>
+      <button class="btn-logout" onclick="logout()">Sair</button>
+    </div>
+  </header>
+  
+  <main>
+    <!-- Stats cards row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-number" id="stat-total">0</span>
+        <span class="stat-label">Total de leads</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="stat-today">0</span>
+        <span class="stat-label">Hoje</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="stat-week">0</span>
+        <span class="stat-label">Esta semana</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number" id="stat-new">0</span>
+        <span class="stat-label">Novos</span>
+      </div>
+    </div>
+
+    <!-- Search/filter bar -->
+    <div class="filter-bar">
+      <input type="text" id="search" placeholder="Buscar por nome, empresa ou e-mail..." oninput="filterLeads()">
+      <select id="filter-status" onchange="filterLeads()">
+        <option value="">Todos os status</option>
+        <option value="novo">Novo</option>
+        <option value="contatado">Contatado</option>
+        <option value="qualificado">Qualificado</option>
+        <option value="negociando">Negociando</option>
+        <option value="fechado">Fechado</option>
+        <option value="perdido">Perdido</option>
+      </select>
+    </div>
+
+    <!-- Leads table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Nome</th>
+            <th>Empresa</th>
+            <th>E-mail</th>
+            <th>Telefone</th>
+            <th>Time</th>
+            <th>Faturamento</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="leads-tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+      <div id="no-leads" class="no-leads" style="display:none">
+        <p>Nenhum lead encontrado.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Lead detail modal -->
+  <div id="lead-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Protect CRM Page
+    if (sessionStorage.getItem('f5_crm_auth') !== 'true') {
+      window.location.href = 'login.html';
+    }
+
+    function logout() {
+      sessionStorage.removeItem('f5_crm_auth');
+      window.location.href = 'login.html';
+    }
+
+    const supabaseUrl = 'https://fpfybbfkpaomvdgotlge.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwZnliYmZrcGFvbXZkZ290bGdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NTg1MDIsImV4cCI6MjA5OTUzNDUwMn0.uYbdg8SXLlOjWGZQJl7fOCI22TAg3RPAh-OigBzaZxA';
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    let allLeads = [];
+    
+    async function loadLeads() {
+      const { data, error } = await supabaseClient
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (error) {
+        console.error('Erro ao buscar leads:', error);
+        return;
+      }
+      
+      // Mapear campos do banco para o frontend
+      allLeads = data.map(l => ({
+        id: l.id,
+        timestamp: l.created_at,
+        name: l.name,
+        company: l.company,
+        email: l.email,
+        phone: l.phone,
+        teamSize: l.team_size,
+        revenue: l.revenue,
+        status: l.status,
+        utm_source: l.utm_source,
+        utm_medium: l.utm_medium,
+        utm_campaign: l.utm_campaign,
+        utm_term: l.utm_term,
+        utm_content: l.utm_content,
+        gclid: l.gclid,
+        fbclid: l.fbclid,
+        referrer: l.referrer,
+        page_url: l.page_url
+      }));
+      
+      updateStats();
+      filterLeads();
+    }
+    
+    function updateStats() {
+      const total = allLeads.length;
+      const today = allLeads.filter(l => new Date(l.timestamp).toDateString() === new Date().toDateString()).length;
+      const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+      const week = allLeads.filter(l => new Date(l.timestamp) >= weekAgo).length;
+      const newLeads = allLeads.filter(l => (l.status || 'novo') === 'novo').length;
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-today').textContent = today;
+      document.getElementById('stat-week').textContent = week;
+      document.getElementById('stat-new').textContent = newLeads;
+      document.getElementById('lead-count').textContent = total + ' leads';
+    }
+    
+    function filterLeads() {
+      const query = (document.getElementById('search').value || '').toLowerCase();
+      const status = document.getElementById('filter-status').value;
+      let filtered = allLeads;
+      if (query) {
+        filtered = filtered.filter(l => 
+          (l.name || '').toLowerCase().includes(query) ||
+          (l.company || '').toLowerCase().includes(query) ||
+          (l.email || '').toLowerCase().includes(query)
+        );
+      }
+      if (status) {
+        filtered = filtered.filter(l => (l.status || 'novo') === status);
+      }
+      renderTable(filtered);
+    }
+    
+    function renderTable(leads) {
+      const tbody = document.getElementById('leads-tbody');
+      const noLeads = document.getElementById('no-leads');
+      if (!leads.length) {
+        tbody.innerHTML = '';
+        noLeads.style.display = 'block';
+        return;
+      }
+      noLeads.style.display = 'none';
+      tbody.innerHTML = leads.map(l => `
+        <tr>
+          <td>${formatDate(l.timestamp)}</td>
+          <td><strong>${escapeHtml(l.name || '-')}</strong></td>
+          <td>${escapeHtml(l.company || '-')}</td>
+          <td>${escapeHtml(l.email || '-')}</td>
+          <td>${escapeHtml(l.phone || '-')}</td>
+          <td>${escapeHtml(l.teamSize || '-')}</td>
+          <td>${escapeHtml(l.revenue || '-')}</td>
+          <td><span class="status-badge status-${l.status || 'novo'}" onclick="cycleStatus(${l.id})">${l.status || 'novo'}</span></td>
+          <td>
+            <button class="action-btn" onclick="viewLead(${l.id})" title="Ver detalhes">👁️</button>
+            <button class="action-btn" onclick="deleteLead(${l.id})" title="Excluir">🗑️</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    function formatDate(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso);
+      return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    }
+    
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+    
+    const statusCycle = ['novo', 'contatado', 'qualificado', 'negociando', 'fechado', 'perdido'];
+    
+    async function cycleStatus(id) {
+      const lead = allLeads.find(l => l.id === id);
+      if (!lead) return;
+      const idx = statusCycle.indexOf(lead.status || 'novo');
+      const newStatus = statusCycle[(idx + 1) % statusCycle.length];
+      
+      // Update local state temporarily for fast UI
+      lead.status = newStatus;
+      renderTable(allLeads);
+      
+      // Update in Supabase
+      const { error } = await supabaseClient
+        .from('leads')
+        .update({ status: newStatus })
+        .eq('id', id);
+        
+      if (error) {
+        console.error('Erro ao atualizar status:', error);
+        // Revert on error
+        loadLeads();
+      } else {
+        updateStats();
+      }
+    }
+    
+    function viewLead(id) {
+      const lead = allLeads.find(l => l.id === id);
+      if (!lead) return;
+      document.getElementById('modal-body').innerHTML = `
+        <h2 style="color:#fff;margin-bottom:0.5rem">${escapeHtml(lead.name)}</h2>
+        <span class="status-badge status-${lead.status || 'novo'}">${lead.status || 'novo'}</span>
+        <div class="detail-grid">
+          <div class="detail-item"><span class="detail-label">Empresa</span><span>${escapeHtml(lead.company || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">E-mail</span><span>${escapeHtml(lead.email || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">Telefone</span><span>${escapeHtml(lead.phone || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">Time de vendas</span><span>${escapeHtml(lead.teamSize || '-')}</span></div>
+          <div class="detail-item" style="grid-column: span 2;"><span class="detail-label">Faturamento</span><span>${escapeHtml(lead.revenue || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">Data</span><span>${formatDate(lead.timestamp)}</span></div>
+          <div class="detail-item"><span class="detail-label">UTM Source</span><span>${escapeHtml(lead.utm_source || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">UTM Medium</span><span>${escapeHtml(lead.utm_medium || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">UTM Campaign</span><span>${escapeHtml(lead.utm_campaign || '-')}</span></div>
+          <div class="detail-item"><span class="detail-label">Referrer</span><span style="word-break: break-all;">${escapeHtml(lead.referrer || '-')}</span></div>
+        </div>
+        <a href="https://wa.me/${(lead.phone||'').replace(/\D/g,'')}" target="_blank" class="wpp-btn" style="margin-top:1.5rem;display:inline-block;background:#25D366;color:#fff;padding:0.75rem 1.5rem;border-radius:999px;text-decoration:none;font-weight:600">Enviar WhatsApp</a>
+      `;
+      document.getElementById('lead-modal').classList.add('active');
+    }
+    
+    function closeModal() {
+      document.getElementById('lead-modal').classList.remove('active');
+    }
+    
+    async function deleteLead(id) {
+      if (!confirm('Excluir este lead?')) return;
+      
+      const { error } = await supabaseClient
+        .from('leads')
+        .delete()
+        .eq('id', id);
+        
+      if (error) {
+        console.error('Erro ao excluir lead:', error);
+        alert('Erro ao excluir lead.');
+      } else {
+        loadLeads();
+        closeModal();
+      }
+    }
+    
+    async function clearLeads() {
+      if (!confirm('Tem certeza que deseja limpar TODOS os leads? Esta ação não pode ser desfeita.')) return;
+      
+      const { error } = await supabaseClient
+        .from('leads')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+        
+      if (error) {
+        console.error('Erro ao limpar leads:', error);
+        alert('Erro ao limpar leads.');
+      } else {
+        loadLeads();
+      }
+    }
+    
+    function exportCSV() {
+      if (!allLeads.length) { alert('Nenhum lead para exportar.'); return; }
+      const headers = ['Data','Nome','Empresa','Email','Telefone','Time de Vendas','Faturamento','Status','UTM Source','UTM Medium','UTM Campaign'];
+      const rows = allLeads.map(l => [
+        formatDate(l.timestamp), l.name, l.company, l.email, l.phone, l.teamSize, l.revenue, (l.status||'novo'), l.utm_source, l.utm_medium, l.utm_campaign
+      ].map(v => '"' + (v||'').replace(/"/g,'""') + '"'));
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'f5-leads-' + new Date().toISOString().slice(0,10) + '.csv';
+      a.click(); URL.revokeObjectURL(url);
+    }
+    
+    document.getElementById('lead-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+    
+    loadLeads();
+    setInterval(loadLeads, 5000);
+  </script>
+</body>
+</html>

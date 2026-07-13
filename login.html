@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login CRM - F5 Traction</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: var(--bg-dark);
+      padding: 1.5rem;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 400px;
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .logo-container img {
+      height: 48px;
+      border-radius: 8px;
+    }
+    .error-msg {
+      display: none;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container reveal">
+    <div class="logo-container">
+      <img src="loog.PNG" alt="F5 Traction">
+    </div>
+
+    <div class="card card-form form-glow">
+      <h2 class="heading-3 text-center mb-6">Acesso ao CRM</h2>
+      
+      <div id="error-message" class="error-msg">
+        Usuário ou senha incorretos.
+      </div>
+
+      <form id="login-form">
+        <label class="form-group mb-4">
+          <span class="form-label">Usuário</span>
+          <input id="username" class="form-input" type="text" required placeholder="Digite seu usuário" autocomplete="username">
+        </label>
+        
+        <label class="form-group mb-6">
+          <span class="form-label">Senha</span>
+          <input id="password" class="form-input" type="password" required placeholder="Digite sua senha" autocomplete="current-password">
+        </label>
+
+        <button type="submit" class="btn-primary w-full">
+          Entrar no Painel
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Simple reveal animation
+    setTimeout(() => {
+      document.querySelector('.reveal').classList.add('is-visible');
+    }, 100);
+
+    const form = document.getElementById('login-form');
+    const errorMsg = document.getElementById('error-message');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      if (user === 'admin' && pass === 'f5@leeds') {
+        // Sucesso: guarda autorização na sessão
+        sessionStorage.setItem('f5_crm_auth', 'true');
+        // Redireciona para o CRM
+        window.location.href = 'leads.html';
+      } else {
+        // Falha
+        errorMsg.style.display = 'block';
+        // Tremidinha no formulário (animação simples)
+        form.parentElement.style.transform = 'translateX(10px)';
+        setTimeout(() => form.parentElement.style.transform = 'translateX(-10px)', 100);
+        setTimeout(() => form.parentElement.style.transform = 'translateX(10px)', 200);
+        setTimeout(() => form.parentElement.style.transform = 'translateX(0)', 300);
+      }
+    });
+  </script>
+</body>
+</html>
