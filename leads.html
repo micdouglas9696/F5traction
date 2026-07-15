@@ -355,10 +355,10 @@
           <td>${escapeHtml(l.phone || '-')}</td>
           <td>${escapeHtml(l.teamSize || '-')}</td>
           <td>${escapeHtml(l.revenue || '-')}</td>
-          <td><span class="status-badge status-${l.status || 'novo'}" onclick="cycleStatus(${l.id})">${l.status || 'novo'}</span></td>
+          <td><span class="status-badge status-${l.status || 'novo'}" onclick="cycleStatus('${l.id}')">${l.status || 'novo'}</span></td>
           <td>
-            <button class="action-btn" onclick="viewLead(${l.id})" title="Ver detalhes">👁️</button>
-            <button class="action-btn" onclick="deleteLead(${l.id})" title="Excluir">🗑️</button>
+            <button class="action-btn" onclick="viewLead('${l.id}')" title="Ver detalhes">👁️</button>
+            <button class="action-btn" onclick="deleteLead('${l.id}')" title="Excluir">🗑️</button>
           </td>
         </tr>
       `).join('');
