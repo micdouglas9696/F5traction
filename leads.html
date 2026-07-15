@@ -167,6 +167,16 @@
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
     .detail-item { background: var(--surface); padding: 1rem; border-radius: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem;}
     .detail-label { font-size: 0.75rem; color: var(--ink-2); text-transform: uppercase; font-weight: 600; }
+    
+    @media (max-width: 768px) {
+      header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .header-actions { flex-wrap: wrap; width: 100%; justify-content: flex-start; }
+      .filter-bar { flex-direction: column; }
+      .stats-row { grid-template-columns: 1fr; gap: 1rem; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .detail-item[style*="grid-column: span 2;"] { grid-column: span 1 !important; }
+      th, td { padding: 0.75rem 0.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -419,7 +429,6 @@
           <div class="detail-item"><span class="detail-label">UTM Source</span><span>${escapeHtml(lead.utm_source || '-')}</span></div>
           <div class="detail-item"><span class="detail-label">UTM Medium</span><span>${escapeHtml(lead.utm_medium || '-')}</span></div>
           <div class="detail-item"><span class="detail-label">UTM Campaign</span><span>${escapeHtml(lead.utm_campaign || '-')}</span></div>
-          <div class="detail-item"><span class="detail-label">Referrer</span><span style="word-break: break-all;">${escapeHtml(lead.referrer || '-')}</span></div>
         </div>
         <a href="https://wa.me/${(lead.phone||'').replace(/\D/g,'')}" target="_blank" class="wpp-btn" style="margin-top:1.5rem;display:inline-block;background:#25D366;color:#fff;padding:0.75rem 1.5rem;border-radius:999px;text-decoration:none;font-weight:600">Enviar WhatsApp</a>
       `;
